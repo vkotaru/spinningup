@@ -5,6 +5,7 @@ import os.path as osp
 import tensorflow as tf
 from spinup import EpochLogger
 from spinup.utils.logx import restore_tf_graph
+import gym, gym_cassie
 
 def load_policy(fpath, itr='last', deterministic=False):
 
@@ -82,7 +83,8 @@ if __name__ == '__main__':
     parser.add_argument('--itr', '-i', type=int, default=-1)
     parser.add_argument('--deterministic', '-d', action='store_true')
     args = parser.parse_args()
-    env, get_action = load_policy(args.fpath, 
+    _, get_action = load_policy(args.fpath, 
                                   args.itr if args.itr >=0 else 'last',
                                   args.deterministic)
+    env = gym.make('Cassie-v0')
     run_policy(env, get_action, args.len, args.episodes, not(args.norender))

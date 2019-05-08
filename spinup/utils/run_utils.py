@@ -19,6 +19,11 @@ from textwrap import dedent
 import time
 from tqdm import trange
 import zlib
+import gym
+import gym_cassie 
+import zlib
+import pickle
+import base64
 
 DIV_LINE_WIDTH = 80
 
@@ -150,8 +155,9 @@ def call_experiment(exp_name, thunk, seed=0, num_cpu=1, data_dir=None,
     def thunk_plus():
         # Make 'env_fn' from 'env_name'
         if 'env_name' in kwargs:
-            import gym
+            import gym, gym_cassie
             env_name = kwargs['env_name']
+            print(env_name)
             kwargs['env_fn'] = lambda : gym.make(env_name)
             del kwargs['env_name']
 
@@ -167,6 +173,8 @@ def call_experiment(exp_name, thunk, seed=0, num_cpu=1, data_dir=None,
 
     entrypoint = osp.join(osp.abspath(osp.dirname(__file__)),'run_entrypoint.py')
     cmd = [sys.executable if sys.executable else 'python', entrypoint, encoded_thunk]
+    # thunk = pickle.loads(zlib.decompress(base64.b64decode(encoded_thunk)))
+    # thunk()
     try:
         subprocess.check_call(cmd, env=os.environ)
     except CalledProcessError:

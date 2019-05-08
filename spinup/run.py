@@ -2,7 +2,7 @@ import spinup
 from spinup.utils.run_utils import ExperimentGrid
 from spinup.utils.serialization_utils import convert_json
 import argparse
-import gym
+import gym, gym_cassie
 import json
 import os, subprocess, sys
 import os.path as osp
