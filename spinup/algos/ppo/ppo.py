@@ -90,9 +90,9 @@ with early stopping based on approximate KL
 
 """
 def ppo(env_fn, actor_critic=core.mlp_actor_critic, ac_kwargs=dict(), seed=0, 
-        steps_per_epoch=4000, epochs=50, gamma=0.99, clip_ratio=0.2, pi_lr=3e-4,
-        vf_lr=1e-3, train_pi_iters=80, train_v_iters=80, lam=0.97, max_ep_len=1000,
-        target_kl=0.01, logger_kwargs=dict(), save_freq=10):
+        steps_per_epoch=5000, epochs=50, gamma=0.99, clip_ratio=0.2, pi_lr=1e-4, #3e-4
+        vf_lr=5e-3, train_pi_iters=100, train_v_iters=100, lam=0.97, max_ep_len=1000,
+        target_kl=0.02, logger_kwargs=dict(), save_freq=10):
     """
 
     Args:
@@ -304,6 +304,8 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--env', type=str, default='HalfCheetah-v2')
     parser.add_argument('--hid', type=int, default=64)
+    # parser.add_argument('--activation', default=tf.nn.relu)
+    # parser.add_argument('--output_activation', default=tf.tanh)
     parser.add_argument('--l', type=int, default=2)
     parser.add_argument('--gamma', type=float, default=0.99)
     parser.add_argument('--seed', '-s', type=int, default=0)
@@ -319,6 +321,6 @@ if __name__ == '__main__':
     logger_kwargs = setup_logger_kwargs(args.exp_name, args.seed)
 
     ppo(lambda : gym.make(args.env), actor_critic=core.mlp_actor_critic,
-        ac_kwargs=dict(hidden_sizes=[args.hid]*args.l), gamma=args.gamma, 
+        ac_kwargs=dict(hidden_sizes=[args.hid]*args.l, activation=tf.nn.relu, output_activation=tf.tanh), gamma=args.gamma, 
         seed=args.seed, steps_per_epoch=args.steps, epochs=args.epochs,
         logger_kwargs=logger_kwargs)
